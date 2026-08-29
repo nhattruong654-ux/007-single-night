@@ -1,0 +1,3 @@
+# ====== Google Sheet (Apps Script Web App URL, xem README) ======
+SHEET_WEBAPP_URL=https://script.google.com/macros/s/xxxxxxxxxxxx/exec
+SHEET_SHARED_SECRET=DOI-CHUOI-BI-MAT-NAY-THANH-CUA-BAN

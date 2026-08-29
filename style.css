@@ -1,0 +1,507 @@
+* { box-sizing: border-box; }
+html, body { overflow-x: hidden; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(198, 30, 30, 0.35), transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(198, 30, 30, 0.25), transparent 50%),
+    linear-gradient(135deg, #0a0a0a 0%, #1a0000 45%, #0a0a0a 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px;
+}
+.wrap {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  transition: max-width 0.2s ease;
+  overflow-x: hidden;
+}
+
+/* Màn hình rộng (tablet ngang, laptop, desktop): cho khung phình ra thay vì
+   giữ cứng 520px khiến 2 bên thừa nhiều khoảng trống đỏ. */
+@media (min-width: 700px) {
+  .wrap { max-width: 640px; }
+}
+@media (min-width: 900px) {
+  .wrap { max-width: 760px; }
+}
+@media (min-width: 1200px) {
+  .wrap { max-width: 880px; }
+}
+@media (min-width: 1600px) {
+  .wrap { max-width: 960px; }
+}
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 28px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+.progress {
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-bar {
+  height: 100%;
+  width: 16.6%;
+  background: #c61e1e;
+  transition: width 0.3s ease;
+}
+.step-label {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 20px;
+}
+h2 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  color: #222;
+}
+.step { display: none; }
+.step.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 16px;
+}
+input, select, textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-top: 6px;
+  padding: 12px 14px;
+  border: 1.5px solid #e2e2e2;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 400;
+  color: #222;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #c61e1e;
+}
+
+/* Fix bug Safari/iOS: input[type="date"] dùng giao diện GỐC của hệ điều hành để
+   vẽ ô ngày, và giao diện gốc đó tự tính width theo nội dung định dạng ngày
+   (vd. "ngày 6 thg 8, 2026" ở locale vi dài hơn en-US) — vì vậy nó phớt lờ
+   width:100% khai báo trong CSS (chỉ set width/min-width như trước không đủ,
+   vì vấn đề nằm ở chỗ input vẫn đang dùng giao diện gốc). Cách khắc phục đã
+   được xác nhận: tắt hẳn giao diện gốc bằng -webkit-appearance: none để trình
+   duyệt vẽ input này như input thường, lúc đó mới thực sự tôn trọng width. */
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  /* Khi tắt appearance mặc định, phần "khung giờ/ngày" bên trong (do hệ điều
+     hành tự vẽ) biến mất — mà chính nó trước giờ là thứ quyết định chiều cao
+     tự nhiên của ô, nên ô bị co lại thấp hơn hẳn input/select khác dùng chung
+     padding. Set cứng line-height + min-height ở đây để chiều cao không còn
+     phụ thuộc vào việc bên trong có nội dung hay không (kể cả khi ô đang rỗng,
+     chưa chọn ngày nào — trên iOS phần rỗng này vốn không hiển thị gì cả). */
+  line-height: 1.4;
+  min-height: 48px;
+}
+/* Sau khi tắt appearance mặc định, đảm bảo icon lịch (Chrome/Edge desktop) vẫn hiện & bấm được. */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 1;
+}
+
+/* Lưới an toàn: nếu vì lý do gì đó trình duyệt vẫn cố vẽ rộng hơn container,
+   label sẽ cắt phần thừa thay vì để nó tràn ra ngoài card. */
+label:has(input[type="date"]) {
+  overflow: hidden;
+}
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+.btn {
+  flex: 1;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary { background: #c61e1e; color: #fff; }
+.btn-primary:hover { background: #a51818; }
+.btn-outline { background: #fff; color: #666; border: 1.5px solid #e2e2e2; }
+.hidden { display: none !important; }
+.review-box {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.8;
+}
+.review-box b { color: #111; }
+.error {
+  color: #d33;
+  font-size: 13px;
+  margin-top: 12px;
+}
+.muted { color: #888; font-size: 13px; }
+.radio-question {
+  margin-bottom: 20px;
+}
+.radio-question-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin: 0 0 8px;
+}
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333;
+  margin-right: 20px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.radio-option input[type="radio"] {
+  width: auto;
+  margin: 0;
+  accent-color: #c61e1e;
+}
+.ticket-option {
+  display: flex;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #e2e2e2;
+  border-radius: 10px;
+  margin-right: 0;
+  margin-bottom: 10px;
+}
+.ticket-option:has(input:checked) {
+  border-color: #c61e1e;
+  background: #fff5f5;
+}
+.ticket-notes {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-left: 3px solid #c61e1e;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 10px 0 16px;
+}
+.ticket-notes-title {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #222;
+  margin: 0 0 6px;
+}
+.ticket-notes ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.ticket-notes li {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 4px;
+}
+.ticket-notes li strong { color: #a51818; }
+
+.companion-note {
+  margin-top: -12px;
+  margin-bottom: 20px;
+}
+
+/* ===== STEP 1: TRANG MỞ ĐẦU ===== */
+.intro-step {
+  /* Không kéo Step 1 lên trên progress/step-label. Đây là nguyên nhân banner che "Bước 1 / 6". */
+  margin: 0 -28px -32px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1a0000 0%, #3a0007 55%, #150000 100%);
+  color: #f2e9e9;
+}
+.intro-banner {
+  width: 100%;
+  line-height: 0;
+  background: #000;
+}
+.intro-banner img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  max-height: 260px;
+  object-position: center 20%;
+}
+.intro-content {
+  padding: 24px 26px 30px;
+}
+.intro-title {
+  margin: 0 0 4px;
+  font-size: 26px;
+  letter-spacing: 2px;
+  color: #fff;
+  text-align: center;
+}
+.intro-tagline {
+  text-align: center;
+  color: #ff8f8f;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 0 18px;
+  letter-spacing: 0.5px;
+}
+.intro-content p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #ecdcdc;
+  margin: 0 0 14px;
+}
+.dress-code {
+  background: rgba(198, 30, 30, 0.18);
+  border: 1px solid rgba(198, 30, 30, 0.5);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #fff;
+  margin: 18px 0;
+}
+.age-range {
+  margin: 18px 0;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.age-range div + div {
+  margin-top: 2px;
+}
+.age-range div {
+  display: flex;
+}
+.age-label {
+  display: inline-block;
+  flex: 0 0 40px;
+}
+.intro-subtitle {
+  font-size: 16px;
+  color: #fff;
+  margin: 22px 0 10px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 18px;
+}
+.intro-notes {
+  margin: 0;
+  padding-left: 20px;
+}
+.intro-notes li {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: #ecdcdc;
+  margin-bottom: 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  body {
+    min-height: 100dvh;
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .wrap {
+    max-width: 100%;
+  }
+
+  .card {
+    width: 100%;
+    border-radius: 16px;
+    padding: 20px 16px;
+  }
+
+  .progress {
+    margin-bottom: 7px;
+  }
+
+  .step-label {
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  h2 {
+    font-size: 19px;
+    margin-bottom: 18px;
+  }
+
+  .intro-step {
+    margin-left: -16px;
+    margin-right: -16px;
+    margin-bottom: -20px;
+    border-radius: 16px;
+  }
+
+  .intro-banner img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .intro-content {
+    padding: 20px 18px 26px;
+  }
+
+  .intro-content p {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .intro-subtitle {
+    font-size: 15px;
+  }
+
+  .intro-notes {
+    padding-left: 19px;
+  }
+
+  .intro-notes li {
+    font-size: 13px;
+    line-height: 1.65;
+    margin-bottom: 9px;
+  }
+
+  .nav-buttons {
+    gap: 8px;
+  }
+
+  .btn {
+    min-height: 46px;
+    padding: 12px 10px;
+  }
+
+  input, select, textarea {
+    font-size: 16px; /* Tránh iOS tự zoom khi focus */
+  }
+
+  .radio-option {
+    margin-right: 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  body {
+    padding: 8px;
+  }
+
+  .card {
+    padding: 16px 12px;
+    border-radius: 14px;
+  }
+
+  .intro-step {
+    margin-left: -12px;
+    margin-right: -12px;
+    margin-bottom: -16px;
+    border-radius: 14px;
+  }
+
+  .intro-content {
+    padding: 18px 14px 22px;
+  }
+
+  .nav-buttons {
+    flex-direction: column-reverse;
+  }
+
+  .nav-buttons .btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 601px) {
+  .intro-banner img {
+    max-height: 300px;
+    object-fit: contain;
+  }
+}
+
+/* ===== MÀN HÌNH RỘNG: tận dụng chiều ngang thay vì để trống 2 bên ===== */
+@media (min-width: 900px) {
+  .card {
+    padding: 40px 48px;
+  }
+
+  .intro-banner img {
+    max-height: 360px;
+  }
+
+  .intro-content {
+    padding: 28px 34px 34px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  /* Step 2 (thông tin cơ bản), 3 (cá nhân), 4 (sở thích), 7 (người đi cùng): chia 2 cột cho đỡ trống */
+  section[data-step="2"].active,
+  section[data-step="3"].active,
+  section[data-step="4"].active,
+  section[data-step="7"].active {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 28px;
+    align-items: start;
+  }
+
+  section[data-step="2"].active h2,
+  section[data-step="3"].active h2,
+  section[data-step="4"].active h2,
+  section[data-step="7"].active h2 {
+    grid-column: 1 / -1;
+  }
+
+  section[data-step="7"].active .companion-note {
+    grid-column: 1 / -1;
+  }
+
+  /* Các trường/khối cần chiếm trọn chiều ngang dù ở layout 2 cột */
+  section[data-step="4"].active label:has(textarea),
+  section[data-step="4"].active label:last-of-type {
+    grid-column: 1 / -1;
+  }
+
+  .review-box {
+    columns: 2;
+    column-gap: 28px;
+  }
+  .review-box > div {
+    break-inside: avoid;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card {
+    padding: 48px 60px;
+  }
+}
