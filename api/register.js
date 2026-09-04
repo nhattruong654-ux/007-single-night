@@ -7,13 +7,15 @@ const TICKET_TYPES = {
   couple: { label: 'Vé đôi (2 nam hoặc 2 nữ)' },
 };
 
-// Các câu hỏi sở thích & kỳ vọng dùng chung cho người đăng ký và người đi cùng.
+// Các câu hỏi (Phụ lục 1 — câu hỏi chia nhóm riêng) dùng chung cho người đăng
+// ký và người đi cùng. q2, q5, q10 không có lựa chọn "Khác" trong form; các
+// câu còn lại nếu khách chọn "Khác" thì giá trị đã được gộp thành
+// "Khác: <nội dung>" ngay từ script.js (client) trước khi gửi lên đây.
 const PREFERENCE_FIELDS = [
-  'personality', 'travelPreference', 'dayOffActivity', 'idealDatingTime',
-  'firstImpression', 'loveValue', 'conflictStyle', 'partnerPreference',
-  'busyPriority', 'loveNeed', 'relationshipStart', 'expectation', 'social',
+  'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10',
+  'expectation', 'social',
 ];
-const BASIC_FIELDS = ['fullName', 'phone', 'email', 'zalo', 'dob', 'gender', 'city'];
+const BASIC_FIELDS = ['fullName', 'phone', 'email', 'dob', 'gender', 'city'];
 const PARTICIPANT_FIELDS = [...BASIC_FIELDS, ...PREFERENCE_FIELDS];
 
 // ====== QUY ĐỊNH ĐỘ TUỔI (tính đến ngày diễn ra sự kiện) — kiểm tra lại ở server
@@ -21,7 +23,7 @@ const PARTICIPANT_FIELDS = [...BASIC_FIELDS, ...PREFERENCE_FIELDS];
 const EVENT_DATE = new Date('2026-09-19T00:00:00');
 const AGE_RULES = {
   'Nam': { min: 18, max: 30 },
-  'Nữ': { min: 18, max: 25 },
+  'Nữ': { min: 18, max: 28 },
   'Khác': { min: 18, max: 30 },
 };
 
@@ -55,10 +57,8 @@ function extractParticipant(data, prefix, role) {
 }
 
 function isParticipantComplete(p) {
-  return p.fullName && p.phone && p.email && p.dob && p.gender && p.city && p.expectation
-    && p.personality && p.travelPreference && p.dayOffActivity && p.idealDatingTime
-    && p.firstImpression && p.loveValue && p.conflictStyle && p.partnerPreference
-    && p.busyPriority && p.loveNeed && p.relationshipStart;
+  return p.fullName && p.phone && p.email && p.dob && p.gender && p.city && p.expectation && p.social
+    && p.q0 && p.q1 && p.q2 && p.q3 && p.q4 && p.q5 && p.q6 && p.q7 && p.q8 && p.q9 && p.q10;
 }
 
 module.exports = async (req, res) => {

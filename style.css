@@ -172,20 +172,26 @@ label:has(input[type="date"]) {
   margin: 0 0 8px;
 }
 .radio-option {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-weight: 400;
   font-size: 14px;
   color: #333;
-  margin-right: 20px;
+  width: 100%;
+  margin-right: 0;
   margin-bottom: 8px;
   cursor: pointer;
 }
 .radio-option input[type="radio"] {
   width: auto;
+  flex: none;
   margin: 0;
   accent-color: #c61e1e;
+}
+.other-input {
+  margin-top: 4px;
+  margin-bottom: 8px;
 }
 .ticket-option {
   display: flex;
@@ -401,10 +407,6 @@ label:has(input[type="date"]) {
 
   input, select, textarea {
     font-size: 16px; /* Tránh iOS tự zoom khi focus */
-  }
-
-  .radio-option {
-    margin-right: 12px;
   }
 }
 

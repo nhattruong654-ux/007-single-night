@@ -21,7 +21,7 @@
       <!-- STEP 1: TRANG MỞ ĐẦU -->
       <section class="step active intro-step" data-step="1">
         <div class="intro-banner">
-          <img src="/assets/single-night-banner.png" alt="Single Night - 007 x Velvet Crumb Manor" />
+          <img src="/assets/single-night-banner.webp" alt="007 Single Night x Velvet Crumb Manor, Aura Vita, Naysao — Thứ 7 19/09/2026, 18:00–22:00, giới hạn 30 khách mời, hoạt động Teabreak, Cocktail & Vang, Game, Ghép đôi, Quà tặng" />
         </div>
         <div class="intro-content">
 
@@ -37,10 +37,10 @@
 
           <div class="age-range">
             <div><span class="age-label">Nam:</span><span>18 - 30 tuổi</span></div>
-            <div><span class="age-label">Nữ:</span><span>18 - 25 tuổi</span></div>
+            <div><span class="age-label">Nữ:</span><span>18 - 28 tuổi</span></div>
           </div>
  
-          <p class="event-time"><strong>19.09.2026 | 17:00 – 22:00</strong></p>
+          <p class="event-time"><strong>19.09.2026 | 18:00 – 22:00</strong></p>
 
           <div class="dress-code"><strong>Dress code:</strong> Đỏ - Đen - Trắng</div>
 
@@ -61,14 +61,14 @@
         <label>Họ và tên *
           <input type="text" name="fullName" required placeholder="Nguyễn Văn A" />
         </label>
-        <label>Số điện thoại *
+        <label>Số điện thoại/Zalo *
           <input type="tel" name="phone" required placeholder="09xxxxxxxx" pattern="[0-9]{9,11}" />
         </label>
         <label>Email *
           <input type="email" name="email" required placeholder="ban@email.com" />
         </label>
-        <label>Zalo (nếu khác số điện thoại)
-          <input type="text" name="zalo" placeholder="Số Zalo để nhận thông báo" />
+        <label>Link mạng xã hội (Facebook/Instagram) *
+          <input type="text" name="social" required placeholder="https://facebook.com/..." />
         </label>
       </section>
 
@@ -78,7 +78,7 @@
         <label>Ngày sinh *
           <input type="date" name="dob" required />
         </label>
-        <!-- <p class="muted age-hint">Độ tuổi tham dự theo quy định: Nam 18 - 30 tuổi, Nữ 18 - 25 tuổi (tính theo năm sinh, năm 2026).</p> -->
+        <!-- <p class="muted age-hint">Độ tuổi tham dự theo quy định: Nam 18 - 30 tuổi, Nữ 18 - 28 tuổi (tính theo năm sinh, năm 2026).</p> -->
         <label>Giới tính *
           <select name="gender" required>
             <option value="">-- Chọn --</option>
@@ -105,79 +105,105 @@
 
       <!-- STEP 4: SỞ THÍCH & KỲ VỌNG -->
       <section class="step" data-step="4">
-        <h2>Sở thích &amp; kỳ vọng</h2>
+        <h2>Hãy cho chúng tôi cơ hội biết thêm về bạn</h2>
+        <p class="muted">Không có câu trả lời đúng hay sai. Cứ là chính bạn, vì những điều bạn chia sẻ sẽ giúp chúng tôi tạo nên những cuộc gặp gỡ phù hợp hơn.</p>
 
         <div class="radio-question">
-          <p class="radio-question-title">Bạn là người hướng nội hay hướng ngoại? *</p>
-          <label class="radio-option"><input type="radio" name="personality" value="Hướng nội" required /> Hướng nội</label>
-          <label class="radio-option"><input type="radio" name="personality" value="Hướng ngoại" required /> Hướng ngoại</label>
+          <p class="radio-question-title">Bạn thường sẽ chi trả bao nhiêu cho một buổi date? *</p>
+          <label class="radio-option"><input type="radio" name="q0" value="Dưới 500k" required /> A. Dưới 500k</label>
+          <label class="radio-option"><input type="radio" name="q0" value="Dưới 1 triệu" required /> B. Dưới 1 triệu</label>
+          <label class="radio-option"><input type="radio" name="q0" value="Dưới 2 triệu" required /> C. Dưới 2 triệu</label>
+          <label class="radio-option"><input type="radio" name="q0" value="Từ 2 triệu trở lên" required /> D. Từ 2 triệu trở lên</label>
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Bạn thích du lịch ở đâu? *</p>
-          <label class="radio-option"><input type="radio" name="travelPreference" value="Núi" required /> Núi</label>
-          <label class="radio-option"><input type="radio" name="travelPreference" value="Biển" required /> Biển</label>
+          <p class="radio-question-title">Bạn sẽ làm gì khi gặp một người lạ đúng gu? *</p>
+          <label class="radio-option"><input type="radio" name="q1" value="Chủ động bắt chuyện" required /> A. Chủ động bắt chuyện</label>
+          <label class="radio-option"><input type="radio" name="q1" value="Nhờ người khác xin info" required /> B. Nhờ người khác xin info</label>
+          <label class="radio-option"><input type="radio" name="q1" value="Kệ mẹ nó, tuỳ duyên" required /> C. Kệ mẹ nó, tuỳ duyên</label>
+          <label class="radio-option"><input type="radio" name="q1" value="Khác" required /> D. Khác</label>
+          <input type="text" name="q1Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Ngày nghỉ bạn thường làm gì? *</p>
-          <label class="radio-option"><input type="radio" name="dayOffActivity" value="Ở nhà" required /> Ở nhà</label>
-          <label class="radio-option"><input type="radio" name="dayOffActivity" value="Đi ra ngoài" required /> Đi ra ngoài</label>
+          <p class="radio-question-title">Nếu xảy ra tranh cãi thì bạn sẽ làm gì? *</p>
+          <label class="radio-option"><input type="radio" name="q2" value="Giải quyết ngay" required /> A. Giải quyết ngay</label>
+          <label class="radio-option"><input type="radio" name="q2" value="Chửi trước, dù có lỗi hay không" required /> B. Chửi trước, dù có lỗi hay không</label>
+          <label class="radio-option"><input type="radio" name="q2" value="Đợi bình tĩnh rồi giải quyết" required /> C. Đợi bình tĩnh rồi giải quyết</label>
+          <label class="radio-option"><input type="radio" name="q2" value="Chia tay trước, hậu quả tính sau" required /> D. Chia tay trước, hậu quả tính sau</label>
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Thời gian hẹn hò lý tưởng nhất? *</p>
-          <label class="radio-option"><input type="radio" name="idealDatingTime" value="Ban ngày" required /> Ban ngày</label>
-          <label class="radio-option"><input type="radio" name="idealDatingTime" value="Ban đêm" required /> Ban đêm</label>
+          <p class="radio-question-title">Bạn là người rep tin nhắn? *</p>
+          <label class="radio-option"><input type="radio" name="q3" value="Rep ngay" required /> A. Rep ngay</label>
+          <label class="radio-option"><input type="radio" name="q3" value="Nếu nhớ thì rep" required /> B. Nếu nhớ thì rep</label>
+          <label class="radio-option"><input type="radio" name="q3" value="Xem trước tin nhắn rồi mới rep" required /> C. Xem trước tin nhắn rồi mới rep</label>
+          <label class="radio-option"><input type="radio" name="q3" value="Khác" required /> D. Khác</label>
+          <input type="text" name="q3Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Điều gì thu hút bạn từ cái nhìn đầu tiên? *</p>
-          <label class="radio-option"><input type="radio" name="firstImpression" value="Khiếu hài hước" required /> Khiếu hài hước</label>
-          <label class="radio-option"><input type="radio" name="firstImpression" value="Sự tinh tế" required /> Sự tinh tế</label>
+          <p class="radio-question-title">Nếu bạn được yêu cầu share bill? *</p>
+          <label class="radio-option"><input type="radio" name="q4" value="Thích thì share" required /> A. Thích thì share</label>
+          <label class="radio-option"><input type="radio" name="q4" value="Hôm nay bạn trả, hôm sau tui trả" required /> B. Hôm nay bạn trả, hôm sau tui trả</label>
+          <label class="radio-option"><input type="radio" name="q4" value="Chuyển khoản trong im lặng" required /> C. Chuyển khoản trong im lặng</label>
+          <label class="radio-option"><input type="radio" name="q4" value="Khác" required /> D. Khác</label>
+          <input type="text" name="q4Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Trong tình yêu, bạn coi trọng hơn? *</p>
-          <label class="radio-option"><input type="radio" name="loveValue" value="Cảm xúc" required /> A. Cảm xúc</label>
-          <label class="radio-option"><input type="radio" name="loveValue" value="Sự phù hợp" required /> B. Sự phù hợp</label>
+          <p class="radio-question-title">Nếu người mới quen rủ bạn đi chơi tối nay? *</p>
+          <label class="radio-option"><input type="radio" name="q5" value="Đồng ý đi liền" required /> A. Đồng ý đi liền</label>
+          <label class="radio-option"><input type="radio" name="q5" value="Đợi năn nỉ" required /> B. Đợi năn nỉ</label>
+          <label class="radio-option"><input type="radio" name="q5" value="Nó muốn ăn t chắc:)))" required /> C. Nó muốn ăn t chắc:)))</label>
+          <label class="radio-option"><input type="radio" name="q5" value="Từ chối" required /> D. Từ chối</label>
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Khi có mâu thuẫn, bạn thường? *</p>
-          <label class="radio-option"><input type="radio" name="conflictStyle" value="Nói chuyện ngay" required /> A. Nói chuyện ngay</label>
-          <label class="radio-option"><input type="radio" name="conflictStyle" value="Cho nhau thời gian bình tĩnh" required /> B. Cho nhau thời gian bình tĩnh</label>
+          <p class="radio-question-title">Nếu được rủ đi nhậu? *</p>
+          <label class="radio-option"><input type="radio" name="q6" value="Đi ngay" required /> A. Đi ngay</label>
+          <label class="radio-option"><input type="radio" name="q6" value="Tìm lí do từ chối" required /> B. Tìm lí do từ chối</label>
+          <label class="radio-option"><input type="radio" name="q6" value="Bao thì đi" required /> C. Bao thì đi</label>
+          <label class="radio-option"><input type="radio" name="q6" value="Khác" required /> D. Khác</label>
+          <input type="text" name="q6Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Bạn thích người yêu? *</p>
-          <label class="radio-option"><input type="radio" name="partnerPreference" value="Giống mình" required /> A. Giống mình</label>
-          <label class="radio-option"><input type="radio" name="partnerPreference" value="Khác mình nhưng bổ sung cho nhau" required /> B. Khác mình nhưng bổ sung cho nhau</label>
+          <p class="radio-question-title">Bạn sẽ làm gì khi nhận tin nhắn "Em ăn cơm chưa?" *</p>
+          <label class="radio-option"><input type="radio" name="q7" value="Rep và hỏi ngược lại" required /> A. Rep và hỏi ngược lại</label>
+          <label class="radio-option"><input type="radio" name="q7" value="Chửi" required /> B. Chửi</label>
+          <label class="radio-option"><input type="radio" name="q7" value="Block" required /> C. Block</label>
+          <label class="radio-option"><input type="radio" name="q7" value="Khác" required /> D. Khác</label>
+          <input type="text" name="q7Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Nếu cả hai đều bận, bạn nghĩ? *</p>
-          <label class="radio-option"><input type="radio" name="busyPriority" value="Vẫn cố gắng dành thời gian cho nhau" required /> A. Vẫn cố gắng dành thời gian cho nhau</label>
-          <label class="radio-option"><input type="radio" name="busyPriority" value="Tôn trọng lịch trình của nhau" required /> B. Tôn trọng lịch trình của nhau</label>
+          <p class="radio-question-title">Khi biết có người đang để ý mình? *</p>
+          <label class="radio-option"><input type="radio" name="q8" value="Biến thái hay gì:))))" required /> A. Biến thái hay gì:))))</label>
+          <label class="radio-option"><input type="radio" name="q8" value="Kệ nóa" required /> B. Kệ nóa</label>
+          <label class="radio-option"><input type="radio" name="q8" value="Xem người đó là ai" required /> C. Xem người đó là ai</label>
+          <label class="radio-option"><input type="radio" name="q8" value="Khác" required /> D. Khác</label>
+          <input type="text" name="q8Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Trong tình yêu, bạn cần nhất? *</p>
-          <label class="radio-option"><input type="radio" name="loveNeed" value="Cảm giác được an toàn" required /> A. Cảm giác được an toàn</label>
-          <label class="radio-option"><input type="radio" name="loveNeed" value="Cảm giác được tự do" required /> B. Cảm giác được tự do</label>
+          <p class="radio-question-title">Người dễ khiến bạn rung động? *</p>
+          <label class="radio-option"><input type="radio" name="q9" value="Mặt đẹp, đạo đức tính sau" required /> A. Mặt đẹp, đạo đức tính sau</label>
+          <label class="radio-option"><input type="radio" name="q9" value="Nói chuyện hợp, mặt tự đẹp dần" required /> B. Nói chuyện hợp, mặt tự đẹp dần</label>
+          <label class="radio-option"><input type="radio" name="q9" value="Không có gu, nghiệp đưa ai yêu người đó" required /> C. Không có gu, nghiệp đưa ai yêu người đó</label>
+          <label class="radio-option"><input type="radio" name="q9" value="Khác" required /> D. Khác</label>
+          <input type="text" name="q9Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Khi bắt đầu một mối quan hệ, bạn? *</p>
-          <label class="radio-option"><input type="radio" name="relationshipStart" value="Tìm hiểu từ từ" required /> A. Tìm hiểu từ từ</label>
-          <label class="radio-option"><input type="radio" name="relationshipStart" value="Nếu hợp thì tiến tới rõ ràng" required /> B. Nếu hợp thì tiến tới rõ ràng</label>
+          <p class="radio-question-title">Đang đi date mà gặp nyc (người yêu cũ)? *</p>
+          <label class="radio-option"><input type="radio" name="q10" value="Chào nhẹ, giả bộ đã chữa lành" required /> A. Chào nhẹ, giả bộ đã chữa lành</label>
+          <label class="radio-option"><input type="radio" name="q10" value="Giả mù nhưng radar hoạt động 200%" required /> B. Giả mù nhưng radar hoạt động 200%</label>
+          <label class="radio-option"><input type="radio" name="q10" value="Khoác tay người mới, thua gì thì thua chứ không thua khí thế" required /> C. Khoác tay người mới, thua gì thì thua chứ không thua khí thế</label>
         </div>
 
         <label>Bạn mong muốn điều gì khi tham dự sự kiện? *
           <textarea name="expectation" rows="3" required placeholder="Chia sẻ ngắn gọn..."></textarea>
-        </label>
-        <label>Link mạng xã hội (Facebook/Instagram)
-          <input type="text" name="social" placeholder="https://facebook.com/..." />
         </label>
       </section>
 
@@ -214,19 +240,19 @@
         <label>Họ và tên *
           <input type="text" name="companionFullName" required placeholder="Nguyễn Văn B" />
         </label>
-        <label>Số điện thoại *
+        <label>Số điện thoại/Zalo *
           <input type="tel" name="companionPhone" required placeholder="09xxxxxxxx" pattern="[0-9]{9,11}" />
         </label>
         <label>Email *
           <input type="email" name="companionEmail" required placeholder="ban@email.com" />
         </label>
-        <label>Zalo (nếu khác số điện thoại)
-          <input type="text" name="companionZalo" placeholder="Số Zalo để nhận thông báo" />
+        <label>Link mạng xã hội của người đi cùng (Facebook/Instagram) *
+          <input type="text" name="companionSocial" required placeholder="https://facebook.com/..." />
         </label>
         <label>Ngày sinh *
           <input type="date" name="companionDob" required />
         </label>
-        <!-- <p class="muted age-hint">Độ tuổi tham dự theo quy định: Nam 18 - 30 tuổi, Nữ 18 - 25 tuổi (tính theo năm sinh, năm 2026).</p> -->
+        <!-- <p class="muted age-hint">Độ tuổi tham dự theo quy định: Nam 18 - 30 tuổi, Nữ 18 - 28 tuổi (tính theo năm sinh, năm 2026).</p> -->
         <label>Giới tính (vé đôi áp dụng cho 2 người cùng giới)
           <input type="text" id="companionGenderDisplay" disabled />
           <input type="hidden" name="companionGender" id="companionGenderHidden" />
@@ -247,76 +273,101 @@
         </label>
 
         <div class="radio-question">
-          <p class="radio-question-title">Người đi cùng là người hướng nội hay hướng ngoại? *</p>
-          <label class="radio-option"><input type="radio" name="companionPersonality" value="Hướng nội" required /> Hướng nội</label>
-          <label class="radio-option"><input type="radio" name="companionPersonality" value="Hướng ngoại" required /> Hướng ngoại</label>
+          <p class="radio-question-title">Người đi cùng thường sẽ chi trả bao nhiêu cho một buổi date? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ0" value="Dưới 500k" required /> A. Dưới 500k</label>
+          <label class="radio-option"><input type="radio" name="companionQ0" value="Dưới 1 triệu" required /> B. Dưới 1 triệu</label>
+          <label class="radio-option"><input type="radio" name="companionQ0" value="Dưới 2 triệu" required /> C. Dưới 2 triệu</label>
+          <label class="radio-option"><input type="radio" name="companionQ0" value="Từ 2 triệu trở lên" required /> D. Từ 2 triệu trở lên</label>
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Người đi cùng thích du lịch ở đâu? *</p>
-          <label class="radio-option"><input type="radio" name="companionTravelPreference" value="Núi" required /> Núi</label>
-          <label class="radio-option"><input type="radio" name="companionTravelPreference" value="Biển" required /> Biển</label>
+          <p class="radio-question-title">Người đi cùng sẽ làm gì khi gặp một người lạ đúng gu? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ1" value="Chủ động bắt chuyện" required /> A. Chủ động bắt chuyện</label>
+          <label class="radio-option"><input type="radio" name="companionQ1" value="Nhờ người khác xin info" required /> B. Nhờ người khác xin info</label>
+          <label class="radio-option"><input type="radio" name="companionQ1" value="Kệ mẹ nó, tuỳ duyên" required /> C. Kệ mẹ nó, tuỳ duyên</label>
+          <label class="radio-option"><input type="radio" name="companionQ1" value="Khác" required /> D. Khác</label>
+          <input type="text" name="companionQ1Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Ngày nghỉ người đi cùng thường làm gì? *</p>
-          <label class="radio-option"><input type="radio" name="companionDayOffActivity" value="Ở nhà" required /> Ở nhà</label>
-          <label class="radio-option"><input type="radio" name="companionDayOffActivity" value="Đi ra ngoài" required /> Đi ra ngoài</label>
+          <p class="radio-question-title">Nếu xảy ra tranh cãi thì người đi cùng sẽ làm gì? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ2" value="Giải quyết ngay" required /> A. Giải quyết ngay</label>
+          <label class="radio-option"><input type="radio" name="companionQ2" value="Chửi trước, dù có lỗi hay không" required /> B. Chửi trước, dù có lỗi hay không</label>
+          <label class="radio-option"><input type="radio" name="companionQ2" value="Đợi bình tĩnh rồi giải quyết" required /> C. Đợi bình tĩnh rồi giải quyết</label>
+          <label class="radio-option"><input type="radio" name="companionQ2" value="Chia tay trước, hậu quả tính sau" required /> D. Chia tay trước, hậu quả tính sau</label>
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Thời gian hẹn hò lý tưởng nhất (người đi cùng)? *</p>
-          <label class="radio-option"><input type="radio" name="companionIdealDatingTime" value="Ban ngày" required /> Ban ngày</label>
-          <label class="radio-option"><input type="radio" name="companionIdealDatingTime" value="Ban đêm" required /> Ban đêm</label>
+          <p class="radio-question-title">Người đi cùng là người rep tin nhắn? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ3" value="Rep ngay" required /> A. Rep ngay</label>
+          <label class="radio-option"><input type="radio" name="companionQ3" value="Nếu nhớ thì rep" required /> B. Nếu nhớ thì rep</label>
+          <label class="radio-option"><input type="radio" name="companionQ3" value="Xem trước tin nhắn rồi mới rep" required /> C. Xem trước tin nhắn rồi mới rep</label>
+          <label class="radio-option"><input type="radio" name="companionQ3" value="Khác" required /> D. Khác</label>
+          <input type="text" name="companionQ3Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Điều gì thu hút người đi cùng từ cái nhìn đầu tiên? *</p>
-          <label class="radio-option"><input type="radio" name="companionFirstImpression" value="Khiếu hài hước" required /> Khiếu hài hước</label>
-          <label class="radio-option"><input type="radio" name="companionFirstImpression" value="Sự tinh tế" required /> Sự tinh tế</label>
+          <p class="radio-question-title">Nếu người đi cùng được yêu cầu share bill? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ4" value="Thích thì share" required /> A. Thích thì share</label>
+          <label class="radio-option"><input type="radio" name="companionQ4" value="Hôm nay bạn trả, hôm sau tui trả" required /> B. Hôm nay bạn trả, hôm sau tui trả</label>
+          <label class="radio-option"><input type="radio" name="companionQ4" value="Chuyển khoản trong im lặng" required /> C. Chuyển khoản trong im lặng</label>
+          <label class="radio-option"><input type="radio" name="companionQ4" value="Khác" required /> D. Khác</label>
+          <input type="text" name="companionQ4Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Trong tình yêu, người đi cùng coi trọng hơn? *</p>
-          <label class="radio-option"><input type="radio" name="companionLoveValue" value="Cảm xúc" required /> A. Cảm xúc</label>
-          <label class="radio-option"><input type="radio" name="companionLoveValue" value="Sự phù hợp" required /> B. Sự phù hợp</label>
+          <p class="radio-question-title">Nếu người mới quen rủ người đi cùng đi chơi tối nay? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ5" value="Đồng ý đi liền" required /> A. Đồng ý đi liền</label>
+          <label class="radio-option"><input type="radio" name="companionQ5" value="Đợi năn nỉ" required /> B. Đợi năn nỉ</label>
+          <label class="radio-option"><input type="radio" name="companionQ5" value="Nó muốn ăn t chắc:)))" required /> C. Nó muốn ăn t chắc:)))</label>
+          <label class="radio-option"><input type="radio" name="companionQ5" value="Từ chối" required /> D. Từ chối</label>
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Khi có mâu thuẫn, người đi cùng thường? *</p>
-          <label class="radio-option"><input type="radio" name="companionConflictStyle" value="Nói chuyện ngay" required /> A. Nói chuyện ngay</label>
-          <label class="radio-option"><input type="radio" name="companionConflictStyle" value="Cho nhau thời gian bình tĩnh" required /> B. Cho nhau thời gian bình tĩnh</label>
+          <p class="radio-question-title">Nếu được rủ đi nhậu (người đi cùng)? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ6" value="Đi ngay" required /> A. Đi ngay</label>
+          <label class="radio-option"><input type="radio" name="companionQ6" value="Tìm lí do từ chối" required /> B. Tìm lí do từ chối</label>
+          <label class="radio-option"><input type="radio" name="companionQ6" value="Bao thì đi" required /> C. Bao thì đi</label>
+          <label class="radio-option"><input type="radio" name="companionQ6" value="Khác" required /> D. Khác</label>
+          <input type="text" name="companionQ6Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Người đi cùng thích người yêu? *</p>
-          <label class="radio-option"><input type="radio" name="companionPartnerPreference" value="Giống mình" required /> A. Giống mình</label>
-          <label class="radio-option"><input type="radio" name="companionPartnerPreference" value="Khác mình nhưng bổ sung cho nhau" required /> B. Khác mình nhưng bổ sung cho nhau</label>
+          <p class="radio-question-title">Người đi cùng sẽ làm gì khi nhận tin nhắn "Em ăn cơm chưa?" *</p>
+          <label class="radio-option"><input type="radio" name="companionQ7" value="Rep và hỏi ngược lại" required /> A. Rep và hỏi ngược lại</label>
+          <label class="radio-option"><input type="radio" name="companionQ7" value="Chửi" required /> B. Chửi</label>
+          <label class="radio-option"><input type="radio" name="companionQ7" value="Block" required /> C. Block</label>
+          <label class="radio-option"><input type="radio" name="companionQ7" value="Khác" required /> D. Khác</label>
+          <input type="text" name="companionQ7Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Nếu cả hai đều bận, người đi cùng nghĩ? *</p>
-          <label class="radio-option"><input type="radio" name="companionBusyPriority" value="Vẫn cố gắng dành thời gian cho nhau" required /> A. Vẫn cố gắng dành thời gian cho nhau</label>
-          <label class="radio-option"><input type="radio" name="companionBusyPriority" value="Tôn trọng lịch trình của nhau" required /> B. Tôn trọng lịch trình của nhau</label>
+          <p class="radio-question-title">Khi biết có người đang để ý người đi cùng? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ8" value="Biến thái hay gì:))))" required /> A. Biến thái hay gì:))))</label>
+          <label class="radio-option"><input type="radio" name="companionQ8" value="Kệ nóa" required /> B. Kệ nóa</label>
+          <label class="radio-option"><input type="radio" name="companionQ8" value="Xem người đó là ai" required /> C. Xem người đó là ai</label>
+          <label class="radio-option"><input type="radio" name="companionQ8" value="Khác" required /> D. Khác</label>
+          <input type="text" name="companionQ8Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Trong tình yêu, người đi cùng cần nhất? *</p>
-          <label class="radio-option"><input type="radio" name="companionLoveNeed" value="Cảm giác được an toàn" required /> A. Cảm giác được an toàn</label>
-          <label class="radio-option"><input type="radio" name="companionLoveNeed" value="Cảm giác được tự do" required /> B. Cảm giác được tự do</label>
+          <p class="radio-question-title">Người dễ khiến người đi cùng rung động? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ9" value="Mặt đẹp, đạo đức tính sau" required /> A. Mặt đẹp, đạo đức tính sau</label>
+          <label class="radio-option"><input type="radio" name="companionQ9" value="Nói chuyện hợp, mặt tự đẹp dần" required /> B. Nói chuyện hợp, mặt tự đẹp dần</label>
+          <label class="radio-option"><input type="radio" name="companionQ9" value="Không có gu, nghiệp đưa ai yêu người đó" required /> C. Không có gu, nghiệp đưa ai yêu người đó</label>
+          <label class="radio-option"><input type="radio" name="companionQ9" value="Khác" required /> D. Khác</label>
+          <input type="text" name="companionQ9Other" class="other-input hidden" placeholder="Nhập câu trả lời khác...">
         </div>
 
         <div class="radio-question">
-          <p class="radio-question-title">Khi bắt đầu một mối quan hệ, người đi cùng? *</p>
-          <label class="radio-option"><input type="radio" name="companionRelationshipStart" value="Tìm hiểu từ từ" required /> A. Tìm hiểu từ từ</label>
-          <label class="radio-option"><input type="radio" name="companionRelationshipStart" value="Nếu hợp thì tiến tới rõ ràng" required /> B. Nếu hợp thì tiến tới rõ ràng</label>
+          <p class="radio-question-title">Đang đi date mà gặp nyc (người đi cùng)? *</p>
+          <label class="radio-option"><input type="radio" name="companionQ10" value="Chào nhẹ, giả bộ đã chữa lành" required /> A. Chào nhẹ, giả bộ đã chữa lành</label>
+          <label class="radio-option"><input type="radio" name="companionQ10" value="Giả mù nhưng radar hoạt động 200%" required /> B. Giả mù nhưng radar hoạt động 200%</label>
+          <label class="radio-option"><input type="radio" name="companionQ10" value="Khoác tay người mới, thua gì thì thua chứ không thua khí thế" required /> C. Khoác tay người mới, thua gì thì thua chứ không thua khí thế</label>
         </div>
 
         <label>Người đi cùng mong muốn điều gì khi tham dự sự kiện? *
           <textarea name="companionExpectation" rows="3" required placeholder="Chia sẻ ngắn gọn..."></textarea>
-        </label>
-        <label>Link mạng xã hội của người đi cùng (Facebook/Instagram)
-          <input type="text" name="companionSocial" placeholder="https://facebook.com/..." />
         </label>
       </section>
 
@@ -337,8 +388,8 @@
 
     <div id="successBox" class="hidden" style="text-align:center;">
       <div style="font-size:56px; margin-bottom:12px;">✅</div>
-      <h2>Đăng ký thành công!</h2>
-      <p class="muted">Cảm ơn bạn đã đăng ký tham dự 007 Single Night. Ban tổ chức sẽ liên hệ xác nhận với bạn sớm.</p>
+      <h2>Cảm ơn bạn!</h2>
+      <p class="muted">Thông tin của bạn đã được ghi nhận và chúng tôi sẽ phản hồi sớm nhất.</p>
     </div>
   </div>
 </div>

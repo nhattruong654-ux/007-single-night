@@ -8,7 +8,7 @@ const TICKET_TYPES = {
 const EVENT_DATE = new Date('2026-09-19T00:00:00');
 const AGE_RULES = {
   'Nam': { min: 18, max: 30 },
-  'Nữ': { min: 18, max: 25 },
+  'Nữ': { min: 18, max: 28 },
   'Khác': { min: 18, max: 30 },
 };
 
@@ -81,6 +81,23 @@ const companionRequiredFields = companionSection
 function setCompanionRequired(isCouple) {
   companionRequiredFields.forEach(el => { el.required = isCouple; });
 }
+
+// "Khác" ở các câu hỏi trắc nghiệm (q1..q10 / companionQ1..Q10): hiện ô nhập
+// tự do ngay khi khách chọn "Khác", bắt buộc điền, và ẩn + xoá nội dung nếu
+// khách đổi sang chọn đáp án khác.
+document.querySelectorAll('.radio-question').forEach(q => {
+  const otherInput = q.querySelector('.other-input');
+  if (!otherInput) return;
+  const radios = q.querySelectorAll('input[type="radio"]');
+  const syncOther = () => {
+    const checked = q.querySelector('input[type="radio"]:checked');
+    const isOther = !!checked && checked.value === 'Khác';
+    otherInput.classList.toggle('hidden', !isOther);
+    otherInput.required = isOther;
+    if (!isOther) otherInput.value = '';
+  };
+  radios.forEach(r => r.addEventListener('change', syncOther));
+});
 
 function getSelectedTicketType() {
   const checked = form.querySelector('input[name="ticketType"]:checked');
@@ -182,9 +199,22 @@ btnBack.addEventListener('click', () => {
   }
 });
 
+// Gộp đáp án "Khác" của các câu trắc nghiệm với nội dung khách tự nhập
+// (vd. q1 = "Khác" + q1Other = "Đi vòng vòng cho nó tình cờ" -> q1 = "Khác: Đi
+// vòng vòng cho nó tình cờ"), rồi bỏ các field "*Other" đi vì đã gộp xong —
+// nhờ vậy Sheet chỉ cần đúng 1 cột cho mỗi câu hỏi, không cần thêm cột riêng.
 function getFormData() {
   const data = {};
   new FormData(form).forEach((v, k) => data[k] = v);
+  Object.keys(data).forEach(key => {
+    if (!key.endsWith('Other') && data[key] === 'Khác') {
+      const otherVal = (data[key + 'Other'] || '').trim();
+      if (otherVal) data[key] = 'Khác: ' + otherVal;
+    }
+  });
+  Object.keys(data).forEach(key => {
+    if (key.endsWith('Other')) delete data[key];
+  });
   return data;
 }
 
@@ -199,22 +229,9 @@ function renderPersonBlock(d, prefix, heading) {
       <div><b>Họ tên:</b> ${get(p('fullName'))}</div>
       <div><b>SĐT:</b> ${get(p('phone'))}</div>
       <div><b>Email:</b> ${get(p('email'))}</div>
-      <div><b>Zalo:</b> ${get(p('zalo')) || '—'}</div>
       <div><b>Ngày sinh:</b> ${get(p('dob'))}</div>
       <div><b>Giới tính:</b> ${get(p('gender'))}</div>
       <div><b>Nơi ở hiện tại:</b> ${get(p('city'))}</div>
-      <div><b>Hướng nội/ngoại:</b> ${get(p('personality'))}</div>
-      <div><b>Sở thích du lịch:</b> ${get(p('travelPreference'))}</div>
-      <div><b>Ngày nghỉ thường làm gì:</b> ${get(p('dayOffActivity'))}</div>
-      <div><b>Thời gian hẹn hò lý tưởng:</b> ${get(p('idealDatingTime'))}</div>
-      <div><b>Ấn tượng đầu tiên:</b> ${get(p('firstImpression'))}</div>
-      <div><b>Coi trọng hơn trong tình yêu:</b> ${get(p('loveValue'))}</div>
-      <div><b>Khi có mâu thuẫn:</b> ${get(p('conflictStyle'))}</div>
-      <div><b>Thích người yêu:</b> ${get(p('partnerPreference'))}</div>
-      <div><b>Khi cả hai bận:</b> ${get(p('busyPriority'))}</div>
-      <div><b>Cần nhất trong tình yêu:</b> ${get(p('loveNeed'))}</div>
-      <div><b>Khi bắt đầu mối quan hệ:</b> ${get(p('relationshipStart'))}</div>
-      <div><b>Kỳ vọng:</b> ${get(p('expectation'))}</div>
       <div><b>MXH:</b> ${get(p('social')) || '—'}</div>
     </div>
   `;

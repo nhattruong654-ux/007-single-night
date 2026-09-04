@@ -16,25 +16,27 @@ var SHEET_NAME = 'Đăng ký';
 // vé cá nhân ghi 1 dòng. Cột "Vai trò" phân biệt "Người đăng ký" / "Người đi cùng".
 var COLUMNS = [
   'STT', 'Thời gian đăng ký', 'Mã đăng ký', 'Vai trò',
-  'Họ tên', 'SĐT', 'Email', 'Zalo', 'Ngày sinh', 'Giới tính', 'Nơi ở hiện tại',
-  'Hướng nội/ngoại', 'Sở thích du lịch', 'Ngày nghỉ thường làm gì',
-  'Thời gian hẹn hò lý tưởng', 'Ấn tượng đầu tiên',
-  'Coi trọng hơn trong tình yêu', 'Khi có mâu thuẫn', 'Thích người yêu',
-  'Khi cả hai bận', 'Cần nhất trong tình yêu', 'Khi bắt đầu mối quan hệ',
+  'Họ tên', 'SĐT', 'Email', 'Ngày sinh', 'Giới tính', 'Nơi ở hiện tại',
+  'Chi trả cho một buổi date',
+  'Gặp người lạ đúng gu', 'Khi tranh cãi', 'Thói quen rep tin nhắn',
+  'Khi được yêu cầu share bill', 'Người mới quen rủ đi chơi tối',
+  'Khi được rủ đi nhậu', 'Khi nhận tin nhắn Em ăn cơm chưa',
+  'Khi biết có người để ý mình', 'Người dễ khiến rung động',
+  'Đang date mà gặp người yêu cũ',
   'Kỳ vọng', 'MXH', 'Loại vé'
 ];
 
 // Ánh xạ tên cột -> tên field gửi lên từ website (api/register.js),
 // dùng cho từng phần tử trong payload.participants.
 var FIELD_MAP = {
-  'Họ tên': 'fullName', 'SĐT': 'phone', 'Email': 'email', 'Zalo': 'zalo',
+  'Họ tên': 'fullName', 'SĐT': 'phone', 'Email': 'email',
   'Ngày sinh': 'dob', 'Giới tính': 'gender', 'Nơi ở hiện tại': 'city',
-  'Hướng nội/ngoại': 'personality', 'Sở thích du lịch': 'travelPreference',
-  'Ngày nghỉ thường làm gì': 'dayOffActivity',
-  'Thời gian hẹn hò lý tưởng': 'idealDatingTime', 'Ấn tượng đầu tiên': 'firstImpression',
-  'Coi trọng hơn trong tình yêu': 'loveValue', 'Khi có mâu thuẫn': 'conflictStyle',
-  'Thích người yêu': 'partnerPreference', 'Khi cả hai bận': 'busyPriority',
-  'Cần nhất trong tình yêu': 'loveNeed', 'Khi bắt đầu mối quan hệ': 'relationshipStart',
+  'Chi trả cho một buổi date': 'q0',
+  'Gặp người lạ đúng gu': 'q1', 'Khi tranh cãi': 'q2',
+  'Thói quen rep tin nhắn': 'q3', 'Khi được yêu cầu share bill': 'q4',
+  'Người mới quen rủ đi chơi tối': 'q5', 'Khi được rủ đi nhậu': 'q6',
+  'Khi nhận tin nhắn Em ăn cơm chưa': 'q7', 'Khi biết có người để ý mình': 'q8',
+  'Người dễ khiến rung động': 'q9', 'Đang date mà gặp người yêu cũ': 'q10',
   'Kỳ vọng': 'expectation', 'MXH': 'social'
 };
 
@@ -84,7 +86,7 @@ function doPost(e) {
 // Các cột dạng số điện thoại — phải ép định dạng ô thành "Văn bản thuần" (@)
 // trước khi ghi, nếu không Sheet sẽ tự nhận diện thành số rồi làm rụng mất số 0
 // ở đầu (vd. 0912345678 -> 912345678).
-var TEXT_FORCED_COLUMNS = ['SĐT', 'Zalo'];
+var TEXT_FORCED_COLUMNS = ['SĐT'];
 
 // Ghi 1 (vé cá nhân) hoặc 2 (vé đôi) dòng đăng ký vào Sheet.
 // Ghi liên tiếp theo đúng thứ tự mảng participants để 2 dòng của vé đôi luôn nằm cạnh nhau.
