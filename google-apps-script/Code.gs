@@ -51,6 +51,12 @@ function ensureSheet_(name, columns, sttColIndex) {
     sheet.getRange(1, 1, 1, columns.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
     if (sttColIndex) sheet.setColumnWidth(sttColIndex, 50);
+  } else {
+    // Sheet đã tồn tại từ trước (vd. tạo bởi phiên bản code cũ) — luôn ghi đè
+    // lại dòng tiêu đề theo đúng COLUMNS hiện tại của code đang chạy, để
+    // header không bị "kẹt" ở tên cột cũ mỗi khi đổi câu hỏi/cột sau này.
+    var existingHeaderRow = sheet.getRange(1, 1, 1, columns.length);
+    existingHeaderRow.setValues([columns]).setFontWeight('bold');
   }
   return sheet;
 }
