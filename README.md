@@ -74,6 +74,14 @@ Với vé đôi, mỗi người tham dự là **một dòng riêng** trong Sheet
 - **Ảnh & giao diện trang mở đầu**: ảnh banner nằm ở `assets/single-night-banner.png`, style riêng cho bước 1 nằm trong khối `/* STEP 1: TRANG MỞ ĐẦU */` của `style.css`.
 - **Giao diện chung**: sửa `style.css`, đổi màu chủ đạo ở biến `#c61e1e` (đỏ) và nền `body` (gradient đen-đỏ).
 
+## Ảnh khách tải lên (profile photo)
+
+Khác với các field còn lại, ảnh khách chọn (input `name="photo"` / `companionPhoto`) **không** đi qua `/api/register` trên Vercel — vì Vercel giới hạn cứng request body 4.5MB, mà base64 hoá ảnh làm dung lượng phình thêm ~33%, nên nếu đi qua Vercel thì ảnh gốc chỉ an toàn tới khoảng 3MB.
+
+Thay vào đó, ngay khi khách chọn ảnh, `script.js` (hàm `setupPhotoUpload`) gửi ảnh (base64) **thẳng tới Apps Script** (action `uploadPhoto`, dùng cùng `SHEET_WEBAPP_URL`/`SHARED_SECRET` — 2 giá trị này vì vậy nằm ngay trong `script.js`, khách xem được qua "View source", không phải bí mật tuyệt đối, chỉ nhằm chặn spam). `Code.gs` (`handleUploadPhoto_`) lưu ảnh vào thư mục Google Drive (`DRIVE_FOLDER_ID`), đặt quyền xem "Anyone with the link", rồi trả về link ảnh. Link đó (chỉ là 1 dòng text ngắn) được lưu vào ô ẩn `photoUrl`/`companionPhotoUrl`, và mới thật sự được gửi lên `/api/register` cùng các field khác khi khách bấm "Hoàn tất đăng ký".
+
+Giới hạn kích thước ảnh phía trình duyệt: `PHOTO_MAX_BYTES` trong `script.js` (đang để 4.5MB). Đổi `DRIVE_FOLDER_ID` trong `Code.gs` nếu muốn lưu ảnh vào thư mục Drive khác.
+
 ## Nếu sau này cần thêm lại thanh toán
 
 Phần thanh toán VNPay đã được gỡ bỏ theo yêu cầu — form hiện chỉ thu thập đăng ký, không thu tiền. Khi cần thêm lại, cân nhắc tạo một API mới (`api/create-payment.js`) dựng trên cùng khung `api/register.js` hiện tại, cộng thêm bước gọi cổng thanh toán trước khi ghi Sheet, tương tự cách VNPay từng được tích hợp.

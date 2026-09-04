@@ -15,7 +15,7 @@ const PREFERENCE_FIELDS = [
   'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10',
   'expectation', 'social',
 ];
-const BASIC_FIELDS = ['fullName', 'phone', 'email', 'dob', 'gender', 'city'];
+const BASIC_FIELDS = ['fullName', 'phone', 'email', 'dob', 'gender', 'city', 'photoUrl'];
 const PARTICIPANT_FIELDS = [...BASIC_FIELDS, ...PREFERENCE_FIELDS];
 
 // ====== QUY ĐỊNH ĐỘ TUỔI (tính đến ngày diễn ra sự kiện) — kiểm tra lại ở server
@@ -57,7 +57,7 @@ function extractParticipant(data, prefix, role) {
 }
 
 function isParticipantComplete(p) {
-  return p.fullName && p.phone && p.email && p.dob && p.gender && p.city && p.expectation && p.social
+  return p.fullName && p.phone && p.email && p.dob && p.gender && p.city && p.expectation && p.social && p.photoUrl
     && p.q0 && p.q1 && p.q2 && p.q3 && p.q4 && p.q5 && p.q6 && p.q7 && p.q8 && p.q9 && p.q10;
 }
 

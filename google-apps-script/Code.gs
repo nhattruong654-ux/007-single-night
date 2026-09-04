@@ -9,6 +9,9 @@ var SHARED_SECRET = 'tram1402';
 // đang active" — getActiveSpreadsheet() sẽ trả về null và gây lỗi.
 var SPREADSHEET_ID = '1MF7ELWeZHrmad0jo3VqjsdScQEHyEorg8UqF7miDU9Y';
 
+// Thư mục Google Drive để lưu ảnh khách tải lên (xem action "uploadPhoto").
+var DRIVE_FOLDER_ID = '1NUZs4gGNgjyRsu83VtaQ617hgT0LHyXU';
+
 // Tab duy nhất — chứa mọi lượt đăng ký (không còn phân biệt đã/chưa thanh toán).
 var SHEET_NAME = 'Đăng ký';
 
@@ -23,7 +26,7 @@ var COLUMNS = [
   'Khi được rủ đi nhậu', 'Khi nhận tin nhắn Em ăn cơm chưa',
   'Khi biết có người để ý mình', 'Người dễ khiến rung động',
   'Đang date mà gặp người yêu cũ',
-  'Kỳ vọng', 'MXH', 'Loại vé'
+  'Kỳ vọng', 'MXH', 'Ảnh', 'Loại vé'
 ];
 
 // Ánh xạ tên cột -> tên field gửi lên từ website (api/register.js),
@@ -37,7 +40,7 @@ var FIELD_MAP = {
   'Người mới quen rủ đi chơi tối': 'q5', 'Khi được rủ đi nhậu': 'q6',
   'Khi nhận tin nhắn Em ăn cơm chưa': 'q7', 'Khi biết có người để ý mình': 'q8',
   'Người dễ khiến rung động': 'q9', 'Đang date mà gặp người yêu cũ': 'q10',
-  'Kỳ vọng': 'expectation', 'MXH': 'social'
+  'Kỳ vọng': 'expectation', 'MXH': 'social', 'Ảnh': 'photoUrl'
 };
 
 // ====== TIỆN ÍCH SHEET ======
@@ -78,6 +81,8 @@ function doPost(e) {
 
     if (payload.action === 'append') {
       result = handleAppend_(payload);
+    } else if (payload.action === 'uploadPhoto') {
+      result = handleUploadPhoto_(payload);
     } else {
       result.error = 'Unknown action';
     }
@@ -130,6 +135,39 @@ function handleAppend_(payload) {
   });
 
   return { ok: true };
+}
+
+// Nhận ảnh (base64) từ trình duyệt khách, lưu vào Drive, trả về link xem
+// công khai. Gọi TRỰC TIẾP từ script.js (không qua /api/register trên
+// Vercel) vì Vercel giới hạn request body 4.5MB — Apps Script không bị
+// giới hạn này nên cho phép đúng dung lượng ảnh khách được chọn (4.5MB).
+function handleUploadPhoto_(payload) {
+  try {
+    var folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
+    var bytes = Utilities.base64Decode(payload.data || '');
+    var blob = Utilities.newBlob(bytes, payload.contentType || 'image/jpeg', payload.fileName || 'anh-khach.jpg');
+    var file = folder.createFile(blob);
+    try {
+      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (shareErr) {
+      // Một số Drive dùng chính sách của tổ chức (Shared Drive) chặn chia sẻ
+      // công khai "Anyone with link" — bỏ qua lỗi này, file vẫn tạo thành
+      // công, chỉ là chỉ người trong tổ chức (đã có quyền vào Shared Drive)
+      // mới xem được link, không phải bất kỳ ai.
+    }
+    return { ok: true, url: 'https://drive.google.com/uc?export=view&id=' + file.getId() };
+  } catch (err) {
+    return { ok: false, error: err.toString() };
+  }
+}
+
+// Chạy thủ công hàm này 1 lần trong trình soạn thảo Apps Script (chọn hàm
+// "authorizeDriveAccess_" ở dropdown trên cùng → bấm ▶️ Run) để Google hiện
+// màn hình xin cấp quyền truy cập Drive — bấm "Advanced" → "Go to ... (unsafe)"
+// → "Allow". Chỉ cần làm 1 lần, không có tác dụng phụ gì (chỉ đọc thư mục).
+function authorizeDriveAccess_() {
+  var folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
+  Logger.log('OK, truy cập được thư mục: ' + folder.getName());
 }
 
 function jsonResponse_(obj) {
