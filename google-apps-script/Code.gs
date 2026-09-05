@@ -15,10 +15,9 @@ var DRIVE_FOLDER_ID = '1NUZs4gGNgjyRsu83VtaQ617hgT0LHyXU';
 // Tab duy nhất — chứa mọi lượt đăng ký (không còn phân biệt đã/chưa thanh toán).
 var SHEET_NAME = 'Đăng ký';
 
-// Mỗi người tham dự = 1 dòng. Vé đôi ghi 2 dòng liên tiếp nhau (cùng Mã đăng ký),
-// vé cá nhân ghi 1 dòng. Cột "Vai trò" phân biệt "Người đăng ký" / "Người đi cùng".
+// Mỗi lượt đăng ký = 1 dòng.
 var COLUMNS = [
-  'STT', 'Thời gian đăng ký', 'Mã đăng ký', 'Vai trò',
+  'STT', 'Thời gian đăng ký', 'Mã đăng ký',
   'Họ tên', 'SĐT', 'Email', 'Ngày sinh', 'Giới tính', 'Nơi ở hiện tại',
   'Chi trả cho một buổi date',
   'Gặp người lạ đúng gu', 'Khi tranh cãi', 'Thói quen rep tin nhắn',
@@ -26,7 +25,7 @@ var COLUMNS = [
   'Khi được rủ đi nhậu', 'Khi nhận tin nhắn Em ăn cơm chưa',
   'Khi biết có người để ý mình', 'Người dễ khiến rung động',
   'Đang date mà gặp người yêu cũ',
-  'Kỳ vọng', 'MXH', 'Ảnh', 'Loại vé'
+  'Kỳ vọng', 'MXH', 'Ảnh'
 ];
 
 // Ánh xạ tên cột -> tên field gửi lên từ website (api/register.js),
@@ -99,8 +98,7 @@ function doPost(e) {
 // ở đầu (vd. 0912345678 -> 912345678).
 var TEXT_FORCED_COLUMNS = ['SĐT'];
 
-// Ghi 1 (vé cá nhân) hoặc 2 (vé đôi) dòng đăng ký vào Sheet.
-// Ghi liên tiếp theo đúng thứ tự mảng participants để 2 dòng của vé đôi luôn nằm cạnh nhau.
+// Ghi 1 dòng đăng ký vào Sheet.
 function handleAppend_(payload) {
   var sheet = getSheet_();
   var participants = payload.participants || [];
@@ -111,8 +109,6 @@ function handleAppend_(payload) {
       if (colName === 'STT') return ''; // điền công thức tự động bên dưới
       if (colName === 'Thời gian đăng ký') return createdAt;
       if (colName === 'Mã đăng ký') return payload.regRef || '';
-      if (colName === 'Vai trò') return participant.role || '';
-      if (colName === 'Loại vé') return payload.ticketType || '';
       var field = FIELD_MAP[colName];
       return field ? (participant[field] || '') : '';
     });

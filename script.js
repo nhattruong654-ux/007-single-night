@@ -1,9 +1,3 @@
-// ====== LOẠI VÉ ======
-const TICKET_TYPES = {
-  single: { label: 'Vé cá nhân' },
-  couple: { label: 'Vé đôi (2 nam hoặc 2 nữ)' },
-};
-
 // ====== UPLOAD ẢNH ======
 // Gửi ảnh THẲNG tới Google Apps Script (không qua /api/register trên Vercel)
 // để tránh giới hạn 4.5MB cho request body của Vercel — base64 hoá ảnh làm
@@ -126,34 +120,14 @@ const btnPay = document.getElementById('btnPay');
 const errorMsg = document.getElementById('errorMsg');
 const successBox = document.getElementById('successBox');
 
-// Người đăng ký: dob cần khớp độ tuổi theo giới tính đã chọn ở cùng bước.
 const dobInput = form.querySelector('input[name="dob"]');
 const genderSelect = form.querySelector('select[name="gender"]');
 const revalidateRegistrantAge = bindAgeValidation(dobInput, () => genderSelect ? genderSelect.value : '');
 if (genderSelect) genderSelect.addEventListener('change', () => revalidateRegistrantAge && revalidateRegistrantAge());
 
-// Người đi cùng: giới tính tự lấy theo người đăng ký (vé đôi cùng giới), nên chỉ cần validate khi nhập dob
-// hoặc mỗi khi giới tính người đăng ký được đồng bộ lại (xem syncCompanionGender()).
-const companionDobInput = form.querySelector('input[name="companionDob"]');
-const companionGenderHidden = document.getElementById('companionGenderHidden');
-const revalidateCompanionAge = bindAgeValidation(companionDobInput, () => companionGenderHidden ? companionGenderHidden.value : '');
-
-
-// Các ô bắt buộc ở bước "Thông tin người đi cùng" chỉ thực sự bắt buộc khi chọn Vé đôi.
-// Nếu để required cố định, khi chọn Vé đơn (không đi qua bước này) trình duyệt vẫn chặn
-// submit vì các ô ẩn đó đang trống (lỗi "not focusable"), nên phải bật/tắt required theo loại vé.
-const companionSection = document.querySelector('section[data-step="6"]');
-const companionRequiredFields = companionSection
-  ? Array.from(companionSection.querySelectorAll('[required]'))
-  : [];
-
-function setCompanionRequired(isCouple) {
-  companionRequiredFields.forEach(el => { el.required = isCouple; });
-}
-
-// "Khác" ở các câu hỏi trắc nghiệm (q1..q10 / companionQ1..Q10): hiện ô nhập
-// tự do ngay khi khách chọn "Khác", bắt buộc điền, và ẩn + xoá nội dung nếu
-// khách đổi sang chọn đáp án khác.
+// "Khác" ở các câu hỏi trắc nghiệm (q1..q10): hiện ô nhập tự do ngay khi
+// khách chọn "Khác", bắt buộc điền, và ẩn + xoá nội dung nếu khách đổi sang
+// chọn đáp án khác.
 document.querySelectorAll('.radio-question').forEach(q => {
   const otherInput = q.querySelector('.other-input');
   if (!otherInput) return;
@@ -168,73 +142,18 @@ document.querySelectorAll('.radio-question').forEach(q => {
   radios.forEach(r => r.addEventListener('change', syncOther));
 });
 
-function getSelectedTicketType() {
-  const checked = form.querySelector('input[name="ticketType"]:checked');
-  return checked ? checked.value : 'single';
-}
-
-form.querySelectorAll('input[name="ticketType"]').forEach(input => {
-  input.addEventListener('change', () => {
-    setCompanionRequired(getSelectedTicketType() === 'couple');
-    // Đổi loại vé làm thay đổi số bước hiển thị (có/không có bước "Người đi cùng"),
-    // nên phải tính lại ngay nút Tiếp tục/Hoàn tất & progress bar tại chỗ.
-    showStep(currentStep);
-  });
-});
-
-// Bước 6 (Thông tin người đi cùng) chỉ hiện khi khách chọn Vé đôi.
-// Các bước còn lại luôn hiển thị.
-function isStepVisible(n) {
-  if (n === 6) return getSelectedTicketType() === 'couple';
-  return true;
-}
-
-function getVisibleSteps() {
-  return steps
-    .map(s => Number(s.dataset.step))
-    .filter(isStepVisible)
-    .sort((a, b) => a - b);
-}
-
-function nextVisibleStep(n) {
-  let next = n + 1;
-  while (next <= totalSteps && !isStepVisible(next)) next++;
-  return next;
-}
-
-function prevVisibleStep(n) {
-  let prev = n - 1;
-  while (prev >= 1 && !isStepVisible(prev)) prev--;
-  return prev;
-}
-
-function syncCompanionGender() {
-  const genderInput = form.querySelector('select[name="gender"]');
-  const genderVal = genderInput ? genderInput.value : '';
-  const display = document.getElementById('companionGenderDisplay');
-  const hidden = document.getElementById('companionGenderHidden');
-  if (display) display.value = genderVal || '(vui lòng chọn giới tính ở bước 3 trước)';
-  if (hidden) hidden.value = genderVal || '';
-  if (revalidateCompanionAge) revalidateCompanionAge();
-}
-
 function showStep(n) {
   currentStep = n;
   steps.forEach(s => s.classList.toggle('active', Number(s.dataset.step) === n));
 
-  const visible = getVisibleSteps();
-  const idx = visible.indexOf(n) + 1;
-  const count = visible.length;
-
-  progressBar.style.width = (idx / count * 100) + '%';
-  stepLabel.textContent = `Bước ${idx} / ${count}`;
-  btnBack.classList.toggle('hidden', idx === 1);
-  btnNext.classList.toggle('hidden', idx === count);
-  btnPay.classList.toggle('hidden', idx !== count);
+  progressBar.style.width = (n / totalSteps * 100) + '%';
+  stepLabel.textContent = `Bước ${n} / ${totalSteps}`;
+  btnBack.classList.toggle('hidden', n === 1);
+  btnNext.classList.toggle('hidden', n === totalSteps);
+  btnPay.classList.toggle('hidden', n !== totalSteps);
   btnNext.textContent = n === 1 ? 'Bắt đầu đăng ký' : 'Tiếp tục';
   errorMsg.classList.add('hidden');
-  if (n === 6) syncCompanionGender();
-  if (n === 7) renderReview();
+  if (n === totalSteps) renderReview();
 }
 
 function currentStepEl() {
@@ -267,16 +186,14 @@ function validateCurrentStep() {
 
 btnNext.addEventListener('click', () => {
   if (!validateCurrentStep()) return;
-  const next = nextVisibleStep(currentStep);
-  if (next <= totalSteps) {
-    showStep(next);
+  if (currentStep < totalSteps) {
+    showStep(currentStep + 1);
   }
 });
 
 btnBack.addEventListener('click', () => {
-  const prev = prevVisibleStep(currentStep);
-  if (prev >= 1) {
-    showStep(prev);
+  if (currentStep > 1) {
+    showStep(currentStep - 1);
   }
 });
 
@@ -287,7 +204,7 @@ btnBack.addEventListener('click', () => {
 function getFormData() {
   const data = {};
   new FormData(form).forEach((v, k) => {
-    if (v instanceof File) return; // input file (photo/companionPhoto) — chỉ cần link ở field *Url, không gửi kèm chính file
+    if (v instanceof File) return; // input file (photo) — chỉ cần link ở field photoUrl, không gửi kèm chính file
     data[k] = v;
   });
   Object.keys(data).forEach(key => {
@@ -302,37 +219,22 @@ function getFormData() {
   return data;
 }
 
-function renderPersonBlock(d, prefix, heading) {
-  // prefix ví dụ 'companion' + 'FullName' -> 'companionFullName'
-  const get = (field) => escapeHtml(d[field] ?? '');
-  const p = (f) => prefix ? prefix + f.charAt(0).toUpperCase() + f.slice(1) : f;
-
-  return `
-    <div class="review-person">
-      <h3 class="review-person-title">${heading}</h3>
-      <div><b>Họ tên:</b> ${get(p('fullName'))}</div>
-      <div><b>SĐT:</b> ${get(p('phone'))}</div>
-      <div><b>Email:</b> ${get(p('email'))}</div>
-      <div><b>Ngày sinh:</b> ${get(p('dob'))}</div>
-      <div><b>Giới tính:</b> ${get(p('gender'))}</div>
-      <div><b>Nơi ở hiện tại:</b> ${get(p('city'))}</div>
-      <div><b>MXH:</b> ${get(p('social')) || '—'}</div>
-    </div>
-  `;
-}
-
 function renderReview() {
   const d = getFormData();
   const box = document.getElementById('reviewBox');
-  const isCouple = getSelectedTicketType() === 'couple';
+  const get = (field) => escapeHtml(d[field] ?? '');
 
-  let html = `<div><b>Loại vé:</b> ${escapeHtml((TICKET_TYPES[getSelectedTicketType()] || TICKET_TYPES.single).label)}</div>`;
-  html += renderPersonBlock(d, '', isCouple ? 'Người đăng ký' : 'Thông tin của bạn');
-  if (isCouple) {
-    html += renderPersonBlock(d, 'companion', 'Người đi cùng');
-  }
-
-  box.innerHTML = html;
+  box.innerHTML = `
+    <div class="review-person">
+      <div><b>Họ tên:</b> ${get('fullName')}</div>
+      <div><b>SĐT:</b> ${get('phone')}</div>
+      <div><b>Email:</b> ${get('email')}</div>
+      <div><b>Ngày sinh:</b> ${get('dob')}</div>
+      <div><b>Giới tính:</b> ${get('gender')}</div>
+      <div><b>Nơi ở hiện tại:</b> ${get('city')}</div>
+      <div><b>MXH:</b> ${get('social') || '—'}</div>
+    </div>
+  `;
 }
 
 function escapeHtml(str) {
@@ -378,5 +280,4 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-setCompanionRequired(getSelectedTicketType() === 'couple');
 showStep(currentStep);

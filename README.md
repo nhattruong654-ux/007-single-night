@@ -54,31 +54,24 @@ Không có bước thanh toán — form chỉ thu thập thông tin đăng ký.
 ## Luồng các bước (form)
 
 1. Trang mở đầu
-2. Thông tin cơ bản (người đăng ký)
-3. Thông tin cá nhân (người đăng ký)
-4. Sở thích & kỳ vọng (người đăng ký)
-5. Chọn loại vé
-6. Thông tin người đi cùng — **chỉ hiện khi chọn Vé đôi**, và người đi cùng phải trả lời đầy đủ các câu hỏi giống người đăng ký (cơ bản, cá nhân, sở thích & kỳ vọng)
-7. Xác nhận thông tin — hiện đầy đủ thông tin của người đăng ký (và người đi cùng nếu là vé đôi) trước khi bấm "Hoàn tất đăng ký"
-
-## Cách ghi vé đôi vào Google Sheet
-
-Với vé đôi, mỗi người tham dự là **một dòng riêng** trong Sheet, nhưng dùng chung một **Mã đăng ký** và có cột **Vai trò** ("Người đăng ký" / "Người đi cùng"). `api/register.js` gửi lên Apps Script một mảng `participants` (1 người với vé cá nhân, 2 người với vé đôi) theo đúng thứ tự; `Code.gs` ghi các dòng này liên tiếp nhau trong tab "Đăng ký", nên **STT của 2 người trong cùng một vé đôi luôn sát nhau**.
+2. Thông tin cơ bản
+3. Thông tin cá nhân
+4. Sở thích & kỳ vọng
+5. Xác nhận thông tin — hiện đầy đủ thông tin trước khi bấm "Hoàn tất đăng ký"
 
 ## Tuỳ chỉnh
 
-- **Đổi câu hỏi trong form**: sửa trong `index.html` — với câu hỏi của người đăng ký, sửa trong `<section class="step" data-step="4">`; với câu hỏi tương ứng của người đi cùng, sửa song song trong `<section class="step" data-step="6">` (tên field có tiền tố `companion`, ví dụ `q1` ↔ `companionQ1`). Sau khi đổi, cập nhật tương ứng trong `script.js` (mảng field trong hàm `renderPersonBlock`) + `api/register.js` (mảng `PREFERENCE_FIELDS`/`BASIC_FIELDS`) + `Code.gs` (object `FIELD_MAP` và mảng `COLUMNS`).
+- **Đổi câu hỏi trong form**: sửa trong `index.html`, khối `<section class="step" data-step="4">`. Sau khi đổi, cập nhật tương ứng trong `script.js` (hàm `renderReview`) + `api/register.js` (mảng `PREFERENCE_FIELDS`/`BASIC_FIELDS`) + `Code.gs` (object `FIELD_MAP` và mảng `COLUMNS`).
 - **Đáp án "Khác"**: một số câu hỏi có lựa chọn "Khác" đi kèm ô nhập tự do (input `name="qNOther"`, class `other-input`, ẩn theo mặc định). `script.js` tự hiện/ẩn + bắt buộc ô này khi khách chọn "Khác" (xem khối `.radio-question` forEach), và gộp lại thành một giá trị duy nhất dạng `"Khác: <nội dung>"` ngay trong `getFormData()` trước khi gửi đi — nên `api/register.js`/`Code.gs` không cần biết gì về field `*Other`, chỉ nhận đúng 1 giá trị cho mỗi câu hỏi.
-- **Đổi loại vé**: sửa object `TICKET_TYPES` ở đầu file `script.js` **và** ở đầu file `api/register.js` (nhãn phải khớp `value` của radio `ticketType` trong `index.html`).
-- **Cột Google Sheet**: cột "Loại vé" ghi nhãn loại vé đã chọn (vd. "Vé cá nhân"), cột "Vai trò" phân biệt người đăng ký / người đi cùng trong vé đôi. Nếu thêm/bớt cột, nhớ cập nhật lại `FIELD_MAP` và `COLUMNS` trong `Code.gs` cho khớp nhau.
+- **Cột Google Sheet**: nếu thêm/bớt cột, nhớ cập nhật lại `FIELD_MAP` và `COLUMNS` trong `Code.gs` cho khớp nhau.
 - **Ảnh & giao diện trang mở đầu**: ảnh banner nằm ở `assets/single-night-banner.png`, style riêng cho bước 1 nằm trong khối `/* STEP 1: TRANG MỞ ĐẦU */` của `style.css`.
 - **Giao diện chung**: sửa `style.css`, đổi màu chủ đạo ở biến `#c61e1e` (đỏ) và nền `body` (gradient đen-đỏ).
 
 ## Ảnh khách tải lên (profile photo)
 
-Khác với các field còn lại, ảnh khách chọn (input `name="photo"` / `companionPhoto`) **không** đi qua `/api/register` trên Vercel — vì Vercel giới hạn cứng request body 4.5MB, mà base64 hoá ảnh làm dung lượng phình thêm ~33%, nên nếu đi qua Vercel thì ảnh gốc chỉ an toàn tới khoảng 3MB.
+Khác với các field còn lại, ảnh khách chọn (input `name="photo"`) **không** đi qua `/api/register` trên Vercel — vì Vercel giới hạn cứng request body 4.5MB, mà base64 hoá ảnh làm dung lượng phình thêm ~33%, nên nếu đi qua Vercel thì ảnh gốc chỉ an toàn tới khoảng 3MB.
 
-Thay vào đó, ngay khi khách chọn ảnh, `script.js` (hàm `setupPhotoUpload`) gửi ảnh (base64) **thẳng tới Apps Script** (action `uploadPhoto`, dùng cùng `SHEET_WEBAPP_URL`/`SHARED_SECRET` — 2 giá trị này vì vậy nằm ngay trong `script.js`, khách xem được qua "View source", không phải bí mật tuyệt đối, chỉ nhằm chặn spam). `Code.gs` (`handleUploadPhoto_`) lưu ảnh vào thư mục Google Drive (`DRIVE_FOLDER_ID`), đặt quyền xem "Anyone with the link", rồi trả về link ảnh. Link đó (chỉ là 1 dòng text ngắn) được lưu vào ô ẩn `photoUrl`/`companionPhotoUrl`, và mới thật sự được gửi lên `/api/register` cùng các field khác khi khách bấm "Hoàn tất đăng ký".
+Thay vào đó, ngay khi khách chọn ảnh, `script.js` (hàm `setupPhotoUpload`) gửi ảnh (base64) **thẳng tới Apps Script** (action `uploadPhoto`, dùng cùng `SHEET_WEBAPP_URL`/`SHARED_SECRET` — 2 giá trị này vì vậy nằm ngay trong `script.js`, khách xem được qua "View source", không phải bí mật tuyệt đối, chỉ nhằm chặn spam). `Code.gs` (`handleUploadPhoto_`) lưu ảnh vào thư mục Google Drive (`DRIVE_FOLDER_ID`), đặt quyền xem "Anyone with the link", rồi trả về link ảnh. Link đó (chỉ là 1 dòng text ngắn) được lưu vào ô ẩn `photoUrl`, và mới thật sự được gửi lên `/api/register` cùng các field khác khi khách bấm "Hoàn tất đăng ký".
 
 Giới hạn kích thước ảnh phía trình duyệt: `PHOTO_MAX_BYTES` trong `script.js` (đang để 4.5MB). Đổi `DRIVE_FOLDER_ID` trong `Code.gs` nếu muốn lưu ảnh vào thư mục Drive khác.
 

@@ -2,15 +2,10 @@
 const SHEET_WEBAPP_URL = (process.env.SHEET_WEBAPP_URL || '').trim();
 const SHEET_SHARED_SECRET = (process.env.SHEET_SHARED_SECRET || '').trim();
 
-const TICKET_TYPES = {
-  single: { label: 'Vé cá nhân' },
-  couple: { label: 'Vé đôi (2 nam hoặc 2 nữ)' },
-};
-
-// Các câu hỏi (Phụ lục 1 — câu hỏi chia nhóm riêng) dùng chung cho người đăng
-// ký và người đi cùng. q2, q5, q10 không có lựa chọn "Khác" trong form; các
-// câu còn lại nếu khách chọn "Khác" thì giá trị đã được gộp thành
-// "Khác: <nội dung>" ngay từ script.js (client) trước khi gửi lên đây.
+// Các câu hỏi (Phụ lục 1 — câu hỏi chia nhóm riêng). q2, q5, q10 không có
+// lựa chọn "Khác" trong form; các câu còn lại nếu khách chọn "Khác" thì giá
+// trị đã được gộp thành "Khác: <nội dung>" ngay từ script.js (client) trước
+// khi gửi lên đây.
 const PREFERENCE_FIELDS = [
   'q0', 'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10',
   'expectation', 'social',
@@ -45,14 +40,11 @@ function isAgeAllowed(gender, dobStr) {
   return age >= rule.min && age <= rule.max;
 }
 
-// Lấy thông tin 1 người từ payload theo prefix ('' cho người đăng ký, 'companion' cho người đi cùng).
-function extractParticipant(data, prefix, role) {
+function extractParticipant(data) {
   const p = {};
   PARTICIPANT_FIELDS.forEach((field) => {
-    const key = prefix ? prefix + field.charAt(0).toUpperCase() + field.slice(1) : field;
-    p[field] = data[key] || '';
+    p[field] = data[field] || '';
   });
-  p.role = role;
   return p;
 }
 
@@ -69,15 +61,8 @@ module.exports = async (req, res) => {
 
   try {
     const data = req.body || {};
-    const { ticketType } = data;
 
-    const ticket = TICKET_TYPES[ticketType];
-    if (!ticket) {
-      res.status(400).json({ error: 'Vui lòng chọn loại vé hợp lệ.' });
-      return;
-    }
-
-    const registrant = extractParticipant(data, '', 'Người đăng ký');
+    const registrant = extractParticipant(data);
     if (!isParticipantComplete(registrant)) {
       res.status(400).json({ error: 'Thiếu thông tin bắt buộc.' });
       return;
@@ -87,29 +72,11 @@ module.exports = async (req, res) => {
       return;
     }
 
-    const participants = [registrant];
-
-    // Vé đôi: bắt buộc phải có đủ thông tin (kể cả sở thích & kỳ vọng) của người đi cùng.
-    if (ticketType === 'couple') {
-      const companion = extractParticipant(data, 'companion', 'Người đi cùng');
-      if (!isParticipantComplete(companion)) {
-        res.status(400).json({ error: 'Vui lòng nhập đầy đủ thông tin người đi cùng.' });
-        return;
-      }
-      if (!isAgeAllowed(companion.gender, companion.dob)) {
-        res.status(400).json({ error: 'Người đi cùng chưa đủ điều kiện độ tuổi tham dự theo quy định của BTC.' });
-        return;
-      }
-      participants.push(companion);
-    }
-
     if (!SHEET_WEBAPP_URL) {
       res.status(500).json({ error: 'Chưa cấu hình Google Sheet (SHEET_WEBAPP_URL).' });
       return;
     }
 
-    // Mã đăng ký duy nhất — dùng chung cho cả 2 người trong vé đôi để ghi 2 dòng
-    // liên tiếp nhau trong Google Sheet.
     const regRef = Date.now().toString() + Math.floor(Math.random() * 1000);
 
     const sheetRes = await fetch(SHEET_WEBAPP_URL, {
@@ -119,8 +86,7 @@ module.exports = async (req, res) => {
         secret: SHEET_SHARED_SECRET,
         action: 'append',
         regRef,
-        ticketType: ticket.label,
-        participants,
+        participants: [registrant],
       }),
     });
     const sheetJson = await sheetRes.json().catch(() => ({}));
